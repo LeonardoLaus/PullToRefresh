@@ -1,0 +1,8 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">PullToRefresh</string>
+    <string name="pull_down">下拉刷新</string>
+    <string name="release_to_refresh">释放刷新</string>
+    <string name="refreshing">刷新中</string>
+    <string name="refresh_complete">刷新完成</string>
+    <string name="recent_refresh">上次更新时间：<xliff:g id="time">%s</xliff:g></string>
+</resources>
