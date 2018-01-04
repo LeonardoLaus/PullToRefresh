@@ -27,6 +27,8 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 
+import java.lang.ref.WeakReference;
+
 import static leon.android.pulltorefresh.State.STATE_COMPLETE;
 import static leon.android.pulltorefresh.State.STATE_IDLE;
 import static leon.android.pulltorefresh.State.STATE_PULL_TO_REFRESH;
@@ -63,8 +65,8 @@ public class NestedPullRefreshLayout extends ViewGroup implements NestedScrollin
     private int mMinimumFlingVelocity;
 
     private float mTotalUnconsumed;
-    private NestedScrollingParentHelper mNestedScrollingParentHelper;
-    private NestedScrollingChildHelper mNestedScrollingChildHelper;
+    private final NestedScrollingParentHelper mNestedScrollingParentHelper;
+    private final NestedScrollingChildHelper mNestedScrollingChildHelper;
 
     private final int[] mParentScrollConsumed = new int[2];
     private final int[] mParentOffsetInWindow = new int[2];
@@ -858,12 +860,12 @@ public class NestedPullRefreshLayout extends ViewGroup implements NestedScrollin
         static final int MSG_START_COMPUTE_SCROLL = 0;
         static final int MSG_CONTINUE_COMPUTE_SCROLL = 1;
         static final int DEFAULT_DELAY = 60;
-        NestedPullRefreshLayout layout;
+        WeakReference<NestedPullRefreshLayout> ptrRef;
 
         long currentDelayTime;
 
         public OverScrollHandler(NestedPullRefreshLayout layout) {
-            this.layout = layout;
+            this.ptrRef = new WeakReference<>(layout);
         }
 
         @Override
@@ -875,12 +877,13 @@ public class NestedPullRefreshLayout extends ViewGroup implements NestedScrollin
                     currentDelayTime = -1;
                 case MSG_CONTINUE_COMPUTE_SCROLL: {
                     currentDelayTime++;
-                    if (!layout.canChildScrollUp()) {
-                        layout.overScroll(velocityY, currentDelayTime, true/*scroll To Top*/);
+                    if (ptrRef.get() == null) return;
+                    if (!ptrRef.get().canChildScrollUp()) {
+                        ptrRef.get().overScroll(velocityY, currentDelayTime, true/*scroll To Top*/);
                         currentDelayTime = DEFAULT_DELAY;
                     }
-                    if (!layout.canChildScrollDown()) {
-                        layout.overScroll(velocityY, currentDelayTime, false/*scroll To Bottom*/);
+                    if (!ptrRef.get().canChildScrollDown()) {
+                        ptrRef.get().overScroll(velocityY, currentDelayTime, false/*scroll To Bottom*/);
                         currentDelayTime = DEFAULT_DELAY;
                     }
                     if (currentDelayTime < DEFAULT_DELAY) {

@@ -1,19 +1,17 @@
 package leon.android.pulltorefresh.sample;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cherry.android.recycler.BaseItemViewDelegate;
 import cherry.android.recycler.ItemViewDelegate;
 import cherry.android.recycler.RecyclerAdapter;
 import cherry.android.recycler.ViewConverter;
@@ -56,13 +54,7 @@ public class RecyclerPullToRefreshActivity extends AppCompatActivity implements 
                         return position % 2 == 0 ? DefaultItemViewDelegate.class : DefaultItemViewDelegate1.class;
                     }
                 });
-        adapter.addDelegate(Integer.class, new ItemViewDelegate<Integer, ViewHolder>() {
-            @NonNull
-            @Override
-            public ViewHolder createViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-                View itemView = inflater.inflate(R.layout.item_app_simple, parent, false);
-                return new ViewHolder(itemView);
-            }
+        adapter.addDelegate(Integer.class, new BaseItemViewDelegate<Integer, ViewHolder>(R.layout.item_app_simple) {
 
             @Override
             public void convert(ViewHolder holder, Integer integer, int position) {
@@ -125,13 +117,10 @@ public class RecyclerPullToRefreshActivity extends AppCompatActivity implements 
         }
     }
 
-    static class DefaultItemViewDelegate implements ItemViewDelegate<String, ViewHolder> {
+    static class DefaultItemViewDelegate extends BaseItemViewDelegate<String, ViewHolder> {
 
-        @NonNull
-        @Override
-        public ViewHolder createViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-            View itemView = inflater.inflate(android.R.layout.simple_list_item_2, parent, false);
-            return new ViewHolder(itemView);
+        public DefaultItemViewDelegate() {
+            super(android.R.layout.simple_list_item_2);
         }
 
         @Override
@@ -143,13 +132,10 @@ public class RecyclerPullToRefreshActivity extends AppCompatActivity implements 
         }
     }
 
-    static class DefaultItemViewDelegate1 implements ItemViewDelegate<String, ViewHolder> {
+    static class DefaultItemViewDelegate1 extends BaseItemViewDelegate<String, ViewHolder> {
 
-        @NonNull
-        @Override
-        public ViewHolder createViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-            View itemView = inflater.inflate(R.layout.item_app_simple_2, parent, false);
-            return new ViewHolder(itemView);
+        public DefaultItemViewDelegate1() {
+            super(R.layout.item_app_simple_2);
         }
 
         @Override

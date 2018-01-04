@@ -2,11 +2,9 @@ package leon.android.pulltorefresh.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cherry.android.recycler.BaseItemViewDelegate;
 import cherry.android.recycler.CommonAdapter;
 import cherry.android.recycler.ItemViewDelegate;
 import cherry.android.recycler.RecyclerAdapter;
@@ -92,13 +91,11 @@ public class HeaderFooterActivity extends AppCompatActivity {
         }
     }
 
-    static class SimpleDelegate implements ItemViewDelegate<String, ViewHolder> {
+    static class SimpleDelegate extends BaseItemViewDelegate<String, ViewHolder> {
 
-        @NonNull
-        @Override
-        public ViewHolder createViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-            View itemView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-            return new ViewHolder(itemView);
+
+        public SimpleDelegate() {
+            super(android.R.layout.simple_list_item_1);
         }
 
         @Override
@@ -108,13 +105,10 @@ public class HeaderFooterActivity extends AppCompatActivity {
         }
     }
 
-    static class RecyclerDelegate implements ItemViewDelegate<String, RecyclerDelegate.DelegateHolder> {
+    static class RecyclerDelegate extends BaseItemViewDelegate<String, RecyclerDelegate.DelegateHolder> {
 
-        @NonNull
-        @Override
-        public DelegateHolder createViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-            View itemView = inflater.inflate(R.layout.layout_recycler, parent, false);
-            return new DelegateHolder(itemView);
+        public RecyclerDelegate() {
+            super(R.layout.layout_recycler);
         }
 
         @Override
